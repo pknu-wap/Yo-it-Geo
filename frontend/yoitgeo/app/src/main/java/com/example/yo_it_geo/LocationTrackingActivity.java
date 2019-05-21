@@ -3,6 +3,7 @@ package com.example.yo_it_geo;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.yo_it_geo.MainActivity.*;
@@ -18,20 +19,19 @@ import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.util.MarkerIcons;
 
-public class LocationTrackingActivity extends MainActivity implements OnMapReadyCallback {
+public class LocationTrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // ...
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        // ...
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
     }
 
-    //@Override
-    public void onRequstPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    // @Override
+    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             return;
         }
