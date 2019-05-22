@@ -28,15 +28,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(final GoogleMap map) {
 
-        LatLng SEOUL = new LatLng(37.56, 126.97);
+        LatLng IGIDAE = new LatLng(35.132242, 129.120661);
 
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(SEOUL);
-        markerOptions.title("서울");
-        markerOptions.snippet("한국의 수도");
+        markerOptions.position(IGIDAE);
+        markerOptions.title("이기대");
+        markerOptions.snippet("코스 시작");
         map.addMarker(markerOptions);
 
-        map.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+        map.moveCamera(CameraUpdateFactory.newLatLng(IGIDAE));
         map.animateCamera(CameraUpdateFactory.zoomTo(10));
     }
 
