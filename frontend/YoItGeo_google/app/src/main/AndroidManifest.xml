@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.yoitgeo_google">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION " />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +15,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="API 키" /> <!-- commit할 때 key 지우기 -->
+            android:value="AIzaSyBLlbCvY4N1_gPS2hc30exq2eSwdsHRL0c" /> <!-- commit할 때 key 지우기 -->
 
         <activity android:name=".MainActivity">
             <intent-filter>

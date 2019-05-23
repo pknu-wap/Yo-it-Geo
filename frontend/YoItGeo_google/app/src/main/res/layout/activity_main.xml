@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout_main"
     tools:context=".MainActivity">
 
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.google.android.gms.maps.SupportMapFragment" />
+        class="com.google.android.gms.maps.MapFragment" />
 
 </android.support.constraint.ConstraintLayout>
