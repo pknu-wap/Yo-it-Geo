@@ -146,33 +146,45 @@ public class MainActivity extends AppCompatActivity
 
     private void startLocationUpdates() {
 
-            if (!checkLocationServicesStatus()) {
+        int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
 
-                Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
-                showDialogForLocationServiceSetting();
-            } else {
+        Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
 
-                int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION);
-                int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION);
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
-                if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
-                hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission())
+            mGoogleMap.setMyLocationEnabled(true);
 
-                    Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
-                    return;
-                }
-
-
-                Log.d(TAG, "startLocationUpdates : call FusedLocationApi.requestLocationUpdates");
-
-                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-
-                if (checkPermission())
-                    mGoogleMap.setMyLocationEnabled(true);
-
-            }
+//        if (!checkLocationServicesStatus()) {
+//
+//            Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
+//            showDialogForLocationServiceSetting();
+//        } else {
+//
+//            int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
+//                    Manifest.permission.ACCESS_FINE_LOCATION);
+//            int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
+//                    Manifest.permission.ACCESS_COARSE_LOCATION);
+//
+//            if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
+//            hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
+//
+//                Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
+//                return;
+//            }
+//
+//
+//            Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
+//
+//            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+//
+//            if (checkPermission())
+//                mGoogleMap.setMyLocationEnabled(true);
+//
+//        }
 
     }
 
@@ -201,42 +213,45 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
-        hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
-
-            // 2. 이미 퍼미션을 가지고 있다면
 
 
-            startLocationUpdates(); // 3. 위치 업데이트 시작
-
-
-        } else { // 2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요하다.
-
-            // 3-1. 사용자가 퍼미션 거부를 한 적이 있는 경우에는
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])) {
-
-                // 3-2. 요청을 진행하기 전에 사용자에게 퍼미션이 필요한 이유를 설명해줄 필요가 있다.
-                Snackbar.make(mLayout, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.",
-                        Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-
-                                // 3-3. 사용자에게 퍼미션 요청을 한다. 요청 결과는 onRequestPermissionResult에서 수신된다.
-                                ActivityCompat.requestPermissions(MainActivity.this, REQUIRED_PERMISSIONS,
-                                        PERMISSIONS_REQUEST_CODE);
-                            }
-                }).show();
-
-
-            } else {
-                // 4-1. 사용자가 퍼미션 거부를 한 적이 없는 경우에는 퍼미션 요청을 바로 한다.
-                // 요청 결과는 onRequestPermissionResult에서 수신된다.
-                ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS,
-                        PERMISSIONS_REQUEST_CODE);
-            }
-
-        }
+        startLocationUpdates();
+//        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
+//        hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
+//
+//            // 2. 이미 퍼미션을 가지고 있다면
+//
+//
+//            startLocationUpdates(); // 3. 위치 업데이트 시작
+//
+//
+//        } else { // 2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요하다.
+//
+//            // 3-1. 사용자가 퍼미션 거부를 한 적이 있는 경우에는
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])) {
+//
+//                // 3-2. 요청을 진행하기 전에 사용자에게 퍼미션이 필요한 이유를 설명해줄 필요가 있다.
+//                Snackbar.make(mLayout, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.",
+//                        Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                                // 3-3. 사용자에게 퍼미션 요청을 한다. 요청 결과는 onRequestPermissionResult에서 수신된다.
+//                                ActivityCompat.requestPermissions(MainActivity.this, REQUIRED_PERMISSIONS,
+//                                        PERMISSIONS_REQUEST_CODE);
+//                            }
+//                }).show();
+//
+//
+//            } else {
+//                // 4-1. 사용자가 퍼미션 거부를 한 적이 없는 경우에는 퍼미션 요청을 바로 한다.
+//                // 요청 결과는 onRequestPermissionResult에서 수신된다.
+//                ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS,
+//                        PERMISSIONS_REQUEST_CODE);
+//            }
+//
+//        }
 
 
 
@@ -441,44 +456,44 @@ public class MainActivity extends AppCompatActivity
             }
 
 
-            if (true) {
-            //if (check_result) {
-
-                // 퍼미션을 허용했다면 위치 업데이트를 시작한다.
-                startLocationUpdates();
-            } else {
-                // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료한다.
-
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])
-                        || ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[1])) {
-
-
-                    // 사용자가 거부만 선택한 경우에는 앱을 다시 실행하여 허용을 선택하면 앱을 사용할 수 있다.
-                    Snackbar.make(mLayout, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요. ",
-                            Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-
-                                    finish();
-                        }
-                    }).show();
-
-                } else {
-
-
-                    // "다시 묻지 않음"을 사용자가 체크하고 거부를 선택한 경우에는 설정(앱 정보)에서 퍼미션을 허용해야 앱을 사용할 수 있다.
-                    Snackbar.make(mLayout, "퍼미션이 거부되었습니다. 설정(앱 정보)에서 퍼미션을 허용해야 합니다. ",
-                            Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-
-                                    finish();
-                        }
-                    }).show();
-                }
-            }
+            startLocationUpdates();
+//            if (check_result) {
+//
+//                // 퍼미션을 허용했다면 위치 업데이트를 시작한다.
+//                startLocationUpdates();
+//            } else {
+//                // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료한다.
+//
+//                if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])
+//                        || ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[1])) {
+//
+//
+//                    // 사용자가 거부만 선택한 경우에는 앱을 다시 실행하여 허용을 선택하면 앱을 사용할 수 있다.
+//                    Snackbar.make(mLayout, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요. ",
+//                            Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
+//
+//                        @Override
+//                        public void onClick(View view) {
+//
+//                                    finish();
+//                        }
+//                    }).show();
+//
+//                } else {
+//
+//
+//                    // "다시 묻지 않음"을 사용자가 체크하고 거부를 선택한 경우에는 설정(앱 정보)에서 퍼미션을 허용해야 앱을 사용할 수 있다.
+//                    Snackbar.make(mLayout, "퍼미션이 거부되었습니다. 설정(앱 정보)에서 퍼미션을 허용해야 합니다. ",
+//                            Snackbar.LENGTH_INDEFINITE).setAction("확인", new View.OnClickListener() {
+//
+//                        @Override
+//                        public void onClick(View view) {
+//
+//                                    finish();
+//                        }
+//                    }).show();
+//                }
+//            }
         }
     }
 
