@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <fragment
         android:id="@+id/map"
         class="com.google.android.gms.maps.MapFragment"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="450dp" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/button_comment"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="이기대 해설" />
+
+    <Button
+        android:id="@+id/button_reservation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="체험 프로그램 예약" />
+
+    <Button
+        android:id="@+id/button_game"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="게임 하기" />
+
+</LinearLayout>

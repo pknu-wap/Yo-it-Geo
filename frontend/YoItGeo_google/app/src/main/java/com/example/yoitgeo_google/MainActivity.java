@@ -1,7 +1,6 @@
 package com.example.yoitgeo_google;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,9 +11,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.Snackbar; // 지우지 말것
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int UPDATE_INTERVAL_MS = 1000; // 1초
-    private static final int FASTEST_UPDATE_INTERVALS_MS = 500; // 0.5초
+    private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
 
 
     // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용된다.
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
 
     // 앱을 실행하기 위해 필요한 퍼미션을 정의한다.
-    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}; // 외부 저장소
 
 
     Location mCurrentLocation;
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL_MS)
-                .setFastestInterval(FASTEST_UPDATE_INTERVALS_MS);
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
 
 
         LocationSettingsRequest.Builder builder =
@@ -119,9 +119,9 @@ public class MainActivity extends AppCompatActivity
 
             List<Location> locationList = locationResult.getLocations();
 
-            if(locationList.size() > 0) {
+            //if(locationList.size() > 0) {
                 location = locationList.get(locationList.size() - 1);
-                location = locationList.get(0);
+                //location = locationList.get(0);
 
                 currentPosition
                         = new LatLng(location.getLatitude(), location.getLongitude());
@@ -138,13 +138,13 @@ public class MainActivity extends AppCompatActivity
                 setCurrentLocation(location, markerTitle, markerSnippet);
 
                 mCurrentLocation = location;
-            }
+            //}
         }
     };
 
 
 
-    private void startLocationUpdates() {
+    private void startLocationUpdates() { // 정확한 위치 추적 불가능, 움직이지 않음
 
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION);
@@ -278,6 +278,43 @@ public class MainActivity extends AppCompatActivity
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(IGIDAE));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
+
+        MarkerOptions markerOptions1 = new MarkerOptions();
+        markerOptions1
+                .position(new LatLng(35.128082, 129.122373))
+                .title("화산각력암층");
+        googleMap.addMarker(markerOptions1);
+
+        MarkerOptions markerOptions2 = new MarkerOptions();
+        markerOptions2
+                .position(new LatLng(35.127511, 129.122423))
+                .title("함각섬석 암맥");
+        googleMap.addMarker(markerOptions2);
+
+        MarkerOptions markerOptions3 = new MarkerOptions();
+        markerOptions3
+                .position(new LatLng(35.125402, 129.123154))
+                .title("구리광산");
+        googleMap.addMarker(markerOptions3);
+
+        MarkerOptions markerOptions4 = new MarkerOptions();
+        markerOptions4
+                .position(new LatLng(35.114814, 129.128166))
+                .title("치마바위");
+        googleMap.addMarker(markerOptions4);
+
+        MarkerOptions markerOptions5 = new MarkerOptions();
+        markerOptions5
+                .position(new LatLng(35.112427, 129.127479))
+                .title("밭골새");
+        googleMap.addMarker(markerOptions5);
+
+        MarkerOptions markerOptions6 = new MarkerOptions();
+        markerOptions6
+                .position(new LatLng(35.109549, 129.127050))
+                .title("농바위");
+        googleMap.addMarker(markerOptions6);
     }
 
 
@@ -390,8 +427,8 @@ public class MainActivity extends AppCompatActivity
 
         //디폴트 위치, 이기대 출발점
         LatLng DEFAULT_LOCATION = new LatLng(35.132242, 129.120661);
-        String markerTitle = "위치정보 가져올 수 없음";
-        String markerSnippet = "위치 퍼미션과 GPS 활성 여부 확인하세요";
+        String markerTitle = "이기대 출발점";
+        String markerSnippet = "기본 위치";
 
 
         if (currentMarker != null) currentMarker.remove();
