@@ -226,6 +226,13 @@ public class MainActivity extends AppCompatActivity implements
                 .position(new LatLng(35.127511, 129.122423))
                 .title("함각섬석 암맥");
         googleMap.addMarker(markerOptions2);
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(MainActivity.this, PopupActivity.class);
+                intent.putExtra("data", "Test Popup");
+            }
+        });
 
         MarkerOptions markerOptions3 = new MarkerOptions();
         markerOptions3
