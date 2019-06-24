@@ -13,11 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".DisplaySubCommentActivity"></activity>
+        <activity android:name=".DisplayCommentActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBLlbCvY4N1_gPS2hc30exq2eSwdsHRL0c" /> <!-- commit할 때 key 지우기 -->
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
