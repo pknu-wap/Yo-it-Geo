@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar; // 지우지 말것
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -46,6 +47,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -82,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private View mLayout; // Snackbar 사용하기 위해서는 View가 필요하다.
     // +) Toast에서는 Context가 필요하다.
+
+
+    private LocationManager locationManager;
+    private static final int REQUEST_CODE_LOCATION = 2;
 
 
     @Override
@@ -137,19 +143,17 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
 
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) !=
-        PackageManager.PERMISSION_GRANTED) {
-            //권한이 없다면 권한 요청 다이얼로그를 표시
-            Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
-            showDialogForLocationServiceSetting();
-
-            ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_CODE);
+        // 사용자의 위치 수신을 위한 세팅
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        // 사용자의 현재 위치
+        Location userLocation = getMyLocation();
+        if (userLocation != null) {
+            double latitude = userLocation.getLatitude();
+            double longitude = userLocation.getLongitude();
+//            userVO.setLat(latitude);
+//            userVO.setLon(longitude);
+            System.out.println("//////////현재 내 위치값 : "+latitude+", "+longitude);
         }
-
     }
 
 
@@ -171,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
             //권한이 없다면 권한 요청 다이얼로그를 표시
+            showDialogForLocationServiceSetting();
 
             ActivityCompat.requestPermissions(this,
                     new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
@@ -251,6 +256,9 @@ public class MainActivity extends AppCompatActivity implements
         Toast.makeText(this, marker.getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
         startActivity(intent);
+
+        // 팝업창 만들기
+
         return true;
     }
 
@@ -298,26 +306,6 @@ public class MainActivity extends AppCompatActivity implements
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mGoogleMap.moveCamera(cameraUpdate);
-
-    }
-
-
-    //여기부터는 런타임 퍼미션 처리을 위한 메소드들
-    private boolean checkPermission() {
-
-        int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-
-
-
-        if (hasFineLocationPermission == PackageManager.PERMISSION_DENIED &&
-        hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-
-        return false;
 
     }
 
@@ -416,6 +404,25 @@ public class MainActivity extends AppCompatActivity implements
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.busan.go.kr/geopark/tm0303"));
         startActivity(intent);
         finish();
+    }
+
+    private Location getMyLocation() {
+        Location currentLocation = null;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            System.out.println("////////////사용자에게 권한을 요청해야함");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this.REQUEST_CODE_LOCATION);
+            getMyLocation(); //이건 써도되고 안써도 되지만, 전 권한 승인하면 즉시 위치값 받아오려고 썼습니다!
+        } else {
+           System.out.println("//////////권한요청 안해도됨");
+            String locationProvider = LocationManager.GPS_PROVIDER;
+            currentLocation = locationManager.getLastKnownLocation(locationProvider);
+            if (currentLocation != null) {
+                double lng = currentLocation.getLongitude();
+                double lat = currentLocation.getLatitude();
+            }
+        }
+        return currentLocation;
     }
 
 }
