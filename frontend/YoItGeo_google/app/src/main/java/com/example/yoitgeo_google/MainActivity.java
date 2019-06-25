@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private GoogleMap mGoogleMap = null;
     private GoogleApiClient mGoogleApiClient;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private Marker currentMarker = null;
 
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -126,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements
 
         builder.addLocationRequest(locationRequest);
 
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -384,18 +380,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    // 버튼 이벤트
-    public void igidaeComment(View view) {
-        Intent intent = new Intent(this, DisplayCommentActivity.class);
-        startActivity(intent);
-    }
-
-    public void igidaeReservation(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.busan.go.kr/geopark/tm0303"));
-        startActivity(intent);
-        finish();
-    }
-
     private Location getMyLocation() {
         Location currentLocation = null;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -413,6 +397,23 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
         return currentLocation;
+    }
+
+    // 버튼 이벤트
+    public void igidaeComment(View view) {
+        Intent intent = new Intent(this, DisplayCommentActivity.class);
+        startActivity(intent);
+    }
+
+    public void igidaeReservation(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.busan.go.kr/geopark/tm0303"));
+        startActivity(intent);
+        finish();
+    }
+
+    public void igidaeGame(View view) {
+        Intent intent = new Intent(this, DisplayGameActivity.class);
+        startActivity(intent);
     }
 
 }
