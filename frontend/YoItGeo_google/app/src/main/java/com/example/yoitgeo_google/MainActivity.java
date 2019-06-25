@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -134,15 +136,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
-
-
-
-    private void startLocationUpdates() { // 정확한 위치 추적 불가능, 움직이지 않음
-
-
-        Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
-
+    private void startLocationUpdates() {
         // 사용자의 위치 수신을 위한 세팅
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         // 사용자의 현재 위치
@@ -206,7 +200,13 @@ public class MainActivity extends AppCompatActivity implements
         markerOptions.position(IGIDAE);
         markerOptions.title("이기대");
         markerOptions.snippet("코스 시작");
-        googleMap.addMarker(markerOptions);
+
+        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.green_leaf_marker);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+
+        //googleMap.addMarker(markerOptions);
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(IGIDAE));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -216,36 +216,42 @@ public class MainActivity extends AppCompatActivity implements
         markerOptions1
                 .position(new LatLng(35.128082, 129.122373))
                 .title("화산각력암층");
+        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions1);
 
         MarkerOptions markerOptions2 = new MarkerOptions();
         markerOptions2
                 .position(new LatLng(35.127511, 129.122423))
                 .title("함각섬석 암맥");
+        markerOptions2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions2);
 
         MarkerOptions markerOptions3 = new MarkerOptions();
         markerOptions3
                 .position(new LatLng(35.125402, 129.123154))
                 .title("구리광산");
+        markerOptions3.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions3);
 
         MarkerOptions markerOptions4 = new MarkerOptions();
         markerOptions4
                 .position(new LatLng(35.114814, 129.128166))
                 .title("치마바위");
+        markerOptions4.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions4);
 
         MarkerOptions markerOptions5 = new MarkerOptions();
         markerOptions5
                 .position(new LatLng(35.112427, 129.127479))
                 .title("밭골새");
+        markerOptions5.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions5);
 
         MarkerOptions markerOptions6 = new MarkerOptions();
         markerOptions6
                 .position(new LatLng(35.109549, 129.127050))
                 .title("농바위");
+        markerOptions6.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions6);
 
         googleMap.setOnMarkerClickListener(this);
@@ -286,27 +292,11 @@ public class MainActivity extends AppCompatActivity implements
 
 
     public void setDefaultLocation() {
-
-
         //디폴트 위치, 이기대 출발점
         LatLng DEFAULT_LOCATION = new LatLng(35.132242, 129.120661);
-        String markerTitle = "이기대 출발점";
-        String markerSnippet = "기본 위치";
-
-
-        if (currentMarker != null) currentMarker.remove();
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = mGoogleMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mGoogleMap.moveCamera(cameraUpdate);
-
     }
 
 
