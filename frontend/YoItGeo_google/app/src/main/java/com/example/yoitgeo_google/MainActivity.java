@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements
 
     // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용된다.
     private static final int PERMISSIONS_REQUEST_CODE = 1000;
-    boolean needRequest = false;
 
 
     private LocationRequest locationRequest;
@@ -156,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements
         mGoogleMap = googleMap;
 
 
-        //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 이기대로 이동
         setDefaultLocation();
 
@@ -208,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
 
+
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1
                 .position(new LatLng(35.128082, 129.122373))
@@ -250,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements
         markerOptions6.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions6);
 
+
         googleMap.setOnMarkerClickListener(this);
     }
 
@@ -266,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
     @Override
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -276,13 +275,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
-    }
-
-    public boolean checkLocationServicesStatus() {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
 
@@ -295,29 +287,6 @@ public class MainActivity extends AppCompatActivity implements
         mGoogleMap.moveCamera(cameraUpdate);
     }
 
-
-
-    // 권한 요청에 대한 응답 처리
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_CODE:
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // 권한이 승인될 경우
-                    startLocationUpdates();
-
-                } else {
-                    // 권한이 거부될 경우
-                    Toast.makeText(this, "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                return;
-        }
-    }
 
 
     //여기부터는 GPS 활성화를 위한 메소드들
@@ -347,31 +316,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-
-            case GPS_ENABLE_REQUEST_CODE:
-
-                //사용자가 GPS 활성 시켰는지 검사
-                if (checkLocationServicesStatus()) {
-                    if (checkLocationServicesStatus()) {
-
-                        Log.d(TAG, "onActivityResult : GPS 활성화되어 있음");
-
-
-                        needRequest = true;
-
-                        return;
-                    }
-                }
-
-                break;
-        }
-    }
-
-    @Override
     public void onConnected(@Nullable Bundle bundle) { }
     @Override
     public void onConnectionSuspended(int i) { }
@@ -386,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             System.out.println("////////////사용자에게 권한을 요청해야함");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this.REQUEST_CODE_LOCATION);
-            getMyLocation(); //이건 써도되고 안써도 되지만, 전 권한 승인하면 즉시 위치값 받아오려고 썼습니다!
+            getMyLocation();
         } else {
            System.out.println("//////////권한요청 안해도됨");
             String locationProvider = LocationManager.GPS_PROVIDER;
