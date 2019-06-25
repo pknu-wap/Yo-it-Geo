@@ -1,45 +1,28 @@
 package com.example.yoitgeo_google;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar; // 지우지 말것
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Api;
-import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,12 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+
 
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -66,33 +44,20 @@ public class MainActivity extends AppCompatActivity implements
 
     private GoogleMap mGoogleMap = null;
     private GoogleApiClient mGoogleApiClient;
+    private FusedLocationProviderClient mFusedLocationClient;
 
-    private static final String TAG = "googlemap_example";
-    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
-    private static final int UPDATE_INTERVAL_MS = 1000; // 1초
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
-
-
-    // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용된다.
+    // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용
     private static final int PERMISSIONS_REQUEST_CODE = 1000;
+    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
 
-
-    private LocationRequest locationRequest;
-    private Location location;
-
-
-    private View mLayout; // Snackbar 사용하기 위해서는 View가 필요하다.
-    // +) Toast에서는 Context가 필요하다.
-
-
-    private LocationManager locationManager;
-    private static final int REQUEST_CODE_LOCATION = 2;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // GoogleApiClient의 인스턴스 생성
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // GoogleApiClient의 인스턴스 생성, 지우지 말것!, 현재 위치정보 얻을 때 필요
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
             .addConnectionCallbacks(this)
@@ -105,43 +70,32 @@ public class MainActivity extends AppCompatActivity implements
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
 
-        mLayout = findViewById(R.id.layout_main);
-
-
-        Log.d(TAG, "onCreate");
-
-
-
-        locationRequest = new LocationRequest()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(UPDATE_INTERVAL_MS)
-                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
-
-
-        LocationSettingsRequest.Builder builder =
-                new LocationSettingsRequest.Builder();
-
-        builder.addLocationRequest(locationRequest);
-
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_CODE);
+            Toast.makeText(this, "현재 위치 표시를 위해 GPS 권한이 필요합니다.", Toast.LENGTH_LONG).show();
+            showDialogForLocationServiceSetting();
+        }
     }
-
-
-
-    private void startLocationUpdates() {
-        // 사용자의 위치 수신을 위한 세팅
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        // 사용자의 현재 위치
-        Location userLocation = getMyLocation();
-        if (userLocation != null) {
-            double latitude = userLocation.getLatitude();
-            double longitude = userLocation.getLongitude();
-//            userVO.setLat(latitude);
-//            userVO.setLon(longitude);
-            System.out.println("//////////현재 내 위치값 : "+latitude+", "+longitude);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 권한이 승인될 경우
+                    System.out.println("권한 승인됨");
+                } else {
+                    Toast.makeText(this, "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
         }
     }
 
@@ -149,42 +103,15 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-        Log.d(TAG, "onMapReady :");
-
         mGoogleMap = googleMap;
-
 
         //지도의 초기위치를 이기대로 이동
         setDefaultLocation();
 
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            //권한이 없다면 권한 요청 다이얼로그를 표시
-            showDialogForLocationServiceSetting();
-
-            ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_CODE);
-        } else {
-            startLocationUpdates();
-        }
-
-
-
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
-            @Override
-            public void onMapClick(LatLng latLng) {
-
-                Log.d(TAG, "onMapClick :");
-            }
-        });
 
 
 
@@ -289,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    //여기부터는 GPS 활성화를 위한 메소드들
+    //GPS 활성화를 위한 메소드
     private void showDialogForLocationServiceSetting() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -324,25 +251,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    private Location getMyLocation() {
-        Location currentLocation = null;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("////////////사용자에게 권한을 요청해야함");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this.REQUEST_CODE_LOCATION);
-            getMyLocation();
-        } else {
-           System.out.println("//////////권한요청 안해도됨");
-            String locationProvider = LocationManager.GPS_PROVIDER;
-            currentLocation = locationManager.getLastKnownLocation(locationProvider);
-            if (currentLocation != null) {
-                double lng = currentLocation.getLongitude();
-                double lat = currentLocation.getLatitude();
-            }
-        }
-        return currentLocation;
-    }
-
     // 버튼 이벤트
     public void igidaeComment(View view) {
         Intent intent = new Intent(this, DisplayCommentActivity.class);
@@ -360,4 +268,27 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    public void onLastLocationButtonClicked(View view) {
+        // 권한 체크
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_CODE);
+                return;
+        }
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    // 현재 위치
+                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    mGoogleMap.addMarker(new MarkerOptions()
+                            .position(myLocation)
+                            .title("현재 위치"));
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+                    // 카메라 줌
+                    mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+                }
+            }
+        });
+    }
 }
