@@ -57,7 +57,8 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mGoogleMap = null;
     private GoogleApiClient mGoogleApiClient;
@@ -203,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements
         googleMap.addMarker(markerOptions);
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(IGIDAE));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
 
         MarkerOptions markerOptions1 = new MarkerOptions();
@@ -211,28 +212,12 @@ public class MainActivity extends AppCompatActivity implements
                 .position(new LatLng(35.128082, 129.122373))
                 .title("화산각력암층");
         googleMap.addMarker(markerOptions1);
-        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(getApplicationContext(), "화산각력암층 해설 페이지로 이동합니다", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
 
         MarkerOptions markerOptions2 = new MarkerOptions();
         markerOptions2
                 .position(new LatLng(35.127511, 129.122423))
                 .title("함각섬석 암맥");
         googleMap.addMarker(markerOptions2);
-        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Intent intent = new Intent(MainActivity.this, PopupActivity.class);
-                intent.putExtra("data", "Test Popup");
-            }
-        });
 
         MarkerOptions markerOptions3 = new MarkerOptions();
         markerOptions3
@@ -257,6 +242,16 @@ public class MainActivity extends AppCompatActivity implements
                 .position(new LatLng(35.109549, 129.127050))
                 .title("농바위");
         googleMap.addMarker(markerOptions6);
+
+        googleMap.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Toast.makeText(this, marker.getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
+        startActivity(intent);
+        return true;
     }
 
 
