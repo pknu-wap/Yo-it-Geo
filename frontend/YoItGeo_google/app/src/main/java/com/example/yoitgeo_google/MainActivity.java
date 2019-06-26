@@ -269,6 +269,12 @@ public class MainActivity extends AppCompatActivity implements
 
 
         //googleMap.setOnMarkerClickListener(this);
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                accessMarker(marker.getTitle());
+            }
+        });
 
 
         startLocationUpdates();
@@ -284,12 +290,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // Toast -> 팝업창으로 대체
-//        Toast.makeText(this, marker.getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
-//        startActivity(intent);
-
-        // 팝업창 만들기
         accessMarker(marker.getTitle());
 
         return true;
@@ -333,10 +333,6 @@ public class MainActivity extends AppCompatActivity implements
 
         int result = checkDistance(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude);
         if (result != -1) {
-            // onMarkerClick과 같은 기능
-//            Toast.makeText(this, arrMarkerOptions[result].getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
-//            startActivity(intent);
             accessMarker(arrMarkerOptions[result].getTitle());
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
@@ -467,17 +463,22 @@ public class MainActivity extends AppCompatActivity implements
         return -1;
     }
 
-    public void accessMarker(String title) {
-        int id = Integer.parseInt(title);
+    public void accessMarker(String s) {
+        final int id = Integer.parseInt(s);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("AlertDialog Title");
-        builder.setMessage("AlertDialog Content");
+        builder.setMessage(arrMarkerOptions[id].getSnippet() + " 해설 페이지로 이동합니다");
         builder.setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getBaseContext(), DisplaySubCommentActivity.class);
 
+                        String title = arrMarkerOptions[id].getSnippet();
+
+                        intent.putExtra("title", title);
+
+                        startActivity(intent);
                     }
                 });
         builder.setNegativeButton("아니오",

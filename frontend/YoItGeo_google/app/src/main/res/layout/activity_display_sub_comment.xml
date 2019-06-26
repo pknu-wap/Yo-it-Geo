@@ -7,7 +7,7 @@
     tools:context=".DisplaySubCommentActivity">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/textView_contentString"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="63dp"
@@ -15,7 +15,7 @@
         android:layout_marginTop="83dp"
         android:layout_marginEnd="63dp"
         android:layout_marginRight="63dp"
-        android:text="화산각력암층"
+        android:text="TextView"
         android:textSize="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
