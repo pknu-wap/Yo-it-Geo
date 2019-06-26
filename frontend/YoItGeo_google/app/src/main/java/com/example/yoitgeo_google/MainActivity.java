@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements
 
         MarkerOptions markerOptions8 = new MarkerOptions();
         markerOptions8
-                .position(new LatLng(35.129332, 129.121977))
+                .position(new LatLng(35.135341, 129.102948))
                 .title("8")
                 .snippet("향파관");
         markerOptions8.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
