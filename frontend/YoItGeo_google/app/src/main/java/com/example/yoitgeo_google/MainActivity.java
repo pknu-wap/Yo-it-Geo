@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -40,6 +41,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -206,59 +209,66 @@ public class MainActivity extends AppCompatActivity implements
         MarkerOptions markerOptions0 = new MarkerOptions();
         markerOptions0
                 .position(new LatLng(35.134818, 129.102960))
-                .title("누리관");
+                .title("0")
+                .snippet("누리관");
 
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1
                 .position(new LatLng(35.128082, 129.122373))
-                .title("화산각력암층");
+                .title("1")
+                .snippet("화산각력암층");
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions1);
 
         MarkerOptions markerOptions2 = new MarkerOptions();
         markerOptions2
                 .position(new LatLng(35.127511, 129.122423))
-                .title("함각섬석 암맥");
+                .title("2")
+                .snippet("함각섬석 암맥");
         markerOptions2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions2);
 
         MarkerOptions markerOptions3 = new MarkerOptions();
         markerOptions3
                 .position(new LatLng(35.125402, 129.123154))
-                .title("구리광산");
+                .title("3")
+                .snippet("구리광산");
         markerOptions3.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions3);
 
         MarkerOptions markerOptions4 = new MarkerOptions();
         markerOptions4
                 .position(new LatLng(35.114814, 129.128166))
-                .title("치마바위");
+                .title("4")
+                .snippet("치마바위");
         markerOptions4.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions4);
 
         MarkerOptions markerOptions5 = new MarkerOptions();
         markerOptions5
                 .position(new LatLng(35.112427, 129.127479))
-                .title("밭골새");
+                .title("5")
+                .snippet("밭골새");
         markerOptions5.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions5);
 
         MarkerOptions markerOptions6 = new MarkerOptions();
         markerOptions6
                 .position(new LatLng(35.109549, 129.127050))
-                .title("농바위");
+                .title("6")
+                .snippet("농바위");
         markerOptions6.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions6);
 
         MarkerOptions[] arrMO = {markerOptions0, markerOptions1, markerOptions2, markerOptions3,
                                         markerOptions4, markerOptions5, markerOptions6};
-        for (int i=0; i<arrMO.length; i++) {
+        //System.arraycopy(arrMO, 0, arrMarkerOptions, 0, arrMO.length);
+        for(int i=0; i<arrMO.length; i++) {
             arrMarkerOptions[i] = arrMO[i];
         }
 
 
-
-        googleMap.setOnMarkerClickListener(this);
+        //googleMap.setOnMarkerClickListener(this);
 
 
         startLocationUpdates();
@@ -274,11 +284,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Toast.makeText(this, marker.getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
-        startActivity(intent);
+        // Toast -> 팝업창으로 대체
+//        Toast.makeText(this, marker.getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
+//        Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
+//        startActivity(intent);
 
         // 팝업창 만들기
+        accessMarker(marker.getTitle());
 
         return true;
     }
@@ -321,10 +333,11 @@ public class MainActivity extends AppCompatActivity implements
 
         int result = checkDistance(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude);
         if (result != -1) {
-            // onMarkerClicked와 같은 기능
-            Toast.makeText(this, arrMarkerOptions[result].getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
-            startActivity(intent);
+            // onMarkerClick과 같은 기능
+//            Toast.makeText(this, arrMarkerOptions[result].getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
+//            startActivity(intent);
+            accessMarker(arrMarkerOptions[result].getTitle());
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
         if (result == -1 && checkPermission()) {
@@ -454,30 +467,25 @@ public class MainActivity extends AppCompatActivity implements
         return -1;
     }
 
-    public void accessMarker(int i) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getApplicationContext());
+    public void accessMarker(String title) {
+        int id = Integer.parseInt(title);
 
-        alertDialogBuilder
-                .setMessage(arrMarkerOptions[i].getTitle() + " 해설 페이지로 이동하겠습니까?")
-                .setCancelable(false)
-                .setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // 페이지 이동한다.
-                                // 서버에 arrayMarker[markerNum] 넘겨 준다
-                                System.out.println("페이지 이동");
-                            }
-                        })
-                .setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-        // 다이얼로그 생성
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("AlertDialog Title");
+        builder.setMessage("AlertDialog Content");
+        builder.setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_LONG).show();
 
-        // 다이얼로그 보여주기
-        alertDialog.show();
+                    }
+                });
+        builder.setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.show();
     }
 }
