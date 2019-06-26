@@ -415,31 +415,31 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    public void onLastLocationButtonClicked(View view) {
-        // 권한 체크
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_CODE);
-                return;
-        }
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    // 현재 위치
-                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                    mGoogleMap.addMarker(new MarkerOptions()
-                            .position(myLocation)
-                            .title("현재 위치"));
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-                    // 카메라 줌
-                    mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
-                    System.out.println(myLocation.latitude + ", " + myLocation.longitude);
-                }
-            }
-        });
-
-    }
+//    public void onLastLocationButtonClicked(View view) {
+//        // 권한 체크
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_CODE);
+//                return;
+//        }
+//        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                if (location != null) {
+//                    // 현재 위치
+//                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//                    mGoogleMap.addMarker(new MarkerOptions()
+//                            .position(myLocation)
+//                            .title("현재 위치"));
+//                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+//                    // 카메라 줌
+//                    mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+//                    System.out.println(myLocation.latitude + ", " + myLocation.longitude);
+//                }
+//            }
+//        });
+//
+//    }
 
     public double getDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
         Location startPos = new Location("PointA");
@@ -477,6 +477,7 @@ public class MainActivity extends AppCompatActivity implements
                         String title = arrMarkerOptions[id].getSnippet();
 
                         intent.putExtra("title", title);
+                        intent.putExtra("id", id);
 
                         startActivity(intent);
                     }

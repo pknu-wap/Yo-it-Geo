@@ -13,7 +13,7 @@ public class DisplaySubCommentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_sub_comment);
 
         String title = "";
-        //String snippet = "";
+        int id;
 
         Bundle extras = getIntent().getExtras();
 
@@ -22,12 +22,22 @@ public class DisplaySubCommentActivity extends AppCompatActivity {
         }
         else {
             title = extras.getString("title");
-            //snippet = extras.getString("snippet");
+            id = extras.getInt("id");
         }
 
         TextView textView = (TextView) findViewById(R.id.textView_contentString);
 
         String str = title + '\n';
         textView.setText(str);
+
+        /*
+        id : 지명
+        1 : 화산각력암층
+        2 : 함각섬석 암맥
+        3 : 구리광산
+        4 : 치마바위
+        5 : 밭골새
+        6 : 농바위
+         */
     }
 }
