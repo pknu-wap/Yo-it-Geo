@@ -2,19 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test start" />
+        android:layout_height="400dp" />
+
     <Button
-        android:id="@+id/httpTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="send"/>
+        android:id="@+id/button_comment"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="이기대 해설"
+        android:onClick="igidaeComment" />
+
+    <Button
+        android:id="@+id/button_reservation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="체험 프로그램 예약"
+        android:onClick="igidaeReservation" />
+
+    <Button
+        android:id="@+id/button_game"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="게임 하기"
+        android:onClick="igidaeGame" />
+
 </LinearLayout>
