@@ -78,9 +78,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // 로딩페이지(스플래쉬)
-        Intent intent = new Intent(this, SplashActivity.class);
-        startActivity(intent);
+
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         // GoogleApiClient의 인스턴스 생성, 지우지 말것!, 현재 위치정보 얻을 때 필요

@@ -15,7 +15,15 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-        <activity android:name=".StartActivity" />
+        <activity
+            android:name=".StartActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".DisplayGameActivity" />
         <activity android:name=".DisplaySubCommentActivity" />
         <activity android:name=".DisplayCommentActivity" />
@@ -23,12 +31,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBLlbCvY4N1_gPS2hc30exq2eSwdsHRL0c" /> <!-- commit할 때 key 지우기 -->
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
