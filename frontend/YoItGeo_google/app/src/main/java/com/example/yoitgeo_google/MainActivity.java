@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
-        if (checkPermissions())
+        if (checkPermission())
             mGoogleMap.setMyLocationEnabled(true);
     }
 
@@ -204,8 +205,8 @@ public class MainActivity extends AppCompatActivity implements
 
         MarkerOptions markerOptions0 = new MarkerOptions();
         markerOptions0
-                .position(new LatLng(37.4219983, -122.084))
-                .title("Default");
+                .position(new LatLng(35.134818, 129.102960))
+                .title("누리관");
 
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1
@@ -307,10 +308,28 @@ public class MainActivity extends AppCompatActivity implements
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
 
+        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.red_leaf_marker);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         currentMarker = mGoogleMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mGoogleMap.moveCamera(cameraUpdate);
+
+
+
+        int result = checkDistance(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude);
+        if (result != -1) {
+            // onMarkerClicked와 같은 기능
+            Toast.makeText(this, arrMarkerOptions[result].getTitle() + "해설 페이지로 이동합니다", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, DisplaySubCommentActivity.class);
+            startActivity(intent);
+            mFusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+        if (result == -1 && checkPermission()) {
+                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        }
     }
 
 
@@ -324,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private boolean checkPermissions() {
+    private boolean checkPermission() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_CODE);
