@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleMap mGoogleMap = null;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
     private Location location;
 
 
-    MarkerOptions[] arrMarkerOptions = new MarkerOptions[7];
+    MarkerOptions[] arrMarkerOptions = new MarkerOptions[8];
 
 
     @Override
@@ -129,11 +128,19 @@ public class MainActivity extends AppCompatActivity implements
 
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
-                String markerTitle = "현재 위치";
-                String markerSnippet = "위도:" + String.valueOf(location.getLatitude()) + " 경도:" + String.valueOf(location.getLongitude());
+//                String markerTitle = "현재 위치";
+//                String markerSnippet = "위도:" + String.valueOf(location.getLatitude()) + " 경도:" + String.valueOf(location.getLongitude());
 
                 // 현재 위치에 마커 생성하고 이동
-                setCurrentLocation(location, markerTitle, markerSnippet);
+                //setCurrentLocation(location, markerTitle, markerSnippet);
+                int result = checkDistance(location.getLatitude(), location.getLongitude());
+                if (result != -1) {
+                    accessMarker(arrMarkerOptions[result].getTitle());
+                    mFusedLocationClient.removeLocationUpdates(locationCallback);
+                }
+                if (result == -1 && checkPermission()) {
+                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                }
 
                 mCurrentLocation = location;
             }
@@ -187,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-        LatLng IGIDAE = new LatLng(35.132242, 129.120661);
+        LatLng IGIDAE = new LatLng(35.126493, 129.122918);
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(IGIDAE);
@@ -214,61 +221,65 @@ public class MainActivity extends AppCompatActivity implements
 
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1
-                .position(new LatLng(35.128082, 129.122373))
+                .position(new LatLng(35.123654, 129.123858))
                 .title("1")
-                .snippet("화산각력암층");
+                .snippet("돌개구멍");
         markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions1);
 
         MarkerOptions markerOptions2 = new MarkerOptions();
         markerOptions2
-                .position(new LatLng(35.127511, 129.122423))
+                .position(new LatLng(35.125402, 129.123154))
                 .title("2")
-                .snippet("함각섬석 암맥");
+                .snippet("구리광산");
         markerOptions2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions2);
 
         MarkerOptions markerOptions3 = new MarkerOptions();
         markerOptions3
-                .position(new LatLng(35.125402, 129.123154))
+                .position(new LatLng(35.127080, 129.122297))
                 .title("3")
-                .snippet("구리광산");
+                .snippet("해식동굴");
         markerOptions3.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions3);
 
         MarkerOptions markerOptions4 = new MarkerOptions();
         markerOptions4
-                .position(new LatLng(35.114814, 129.128166))
+                .position(new LatLng(35.127511, 129.122423))
                 .title("4")
-                .snippet("치마바위");
+                .snippet("함각섬석암맥");
         markerOptions4.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions4);
 
         MarkerOptions markerOptions5 = new MarkerOptions();
         markerOptions5
-                .position(new LatLng(35.112427, 129.127479))
+                .position(new LatLng(35.128082, 129.122373))
                 .title("5")
-                .snippet("밭골새");
+                .snippet("화산각력암층");
         markerOptions5.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions5);
 
         MarkerOptions markerOptions6 = new MarkerOptions();
         markerOptions6
-                .position(new LatLng(35.109549, 129.127050))
+                .position(new LatLng(35.128574, 129.121985))
                 .title("6")
-                .snippet("농바위");
+                .snippet("보석광물벽옥");
         markerOptions6.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions6);
 
+        MarkerOptions markerOptions7 = new MarkerOptions();
+        markerOptions7
+                .position(new LatLng(35.129332, 129.121977))
+                .title("7")
+                .snippet("응회질퇴적암층");
+        markerOptions7.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+        googleMap.addMarker(markerOptions7);
+
         MarkerOptions[] arrMO = {markerOptions0, markerOptions1, markerOptions2, markerOptions3,
-                                        markerOptions4, markerOptions5, markerOptions6};
-        //System.arraycopy(arrMO, 0, arrMarkerOptions, 0, arrMO.length);
-        for(int i=0; i<arrMO.length; i++) {
-            arrMarkerOptions[i] = arrMO[i];
-        }
+                                        markerOptions4, markerOptions5, markerOptions6, markerOptions7};
+        System.arraycopy(arrMO, 0, arrMarkerOptions, 0, arrMO.length);
 
 
-        //googleMap.setOnMarkerClickListener(this);
         mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -288,12 +299,12 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        accessMarker(marker.getTitle());
-
-        return true;
-    }
+//    @Override
+//    public boolean onMarkerClick(Marker marker) {
+//        accessMarker(marker.getTitle());
+//
+//        return true;
+//    }
 
 
 
@@ -309,37 +320,37 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
-        if (currentMarker != null) currentMarker.remove();
-
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-
-        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.red_leaf_marker);
-        Bitmap b = bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-        currentMarker = mGoogleMap.addMarker(markerOptions);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-        mGoogleMap.moveCamera(cameraUpdate);
-
-
-
-        int result = checkDistance(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude);
-        if (result != -1) {
-            accessMarker(arrMarkerOptions[result].getTitle());
-            mFusedLocationClient.removeLocationUpdates(locationCallback);
-        }
-        if (result == -1 && checkPermission()) {
-                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-        }
-    }
+//    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
+//        if (currentMarker != null) currentMarker.remove();
+//
+//        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+//
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(currentLatLng);
+//        markerOptions.title(markerTitle);
+//        markerOptions.snippet(markerSnippet);
+//        markerOptions.draggable(true);
+//
+//        BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.red_leaf_marker);
+//        Bitmap b = bitmapdraw.getBitmap();
+//        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
+//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+//        currentMarker = mGoogleMap.addMarker(markerOptions);
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+//        mGoogleMap.moveCamera(cameraUpdate);
+//
+//
+//
+//        int result = checkDistance(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude);
+//        if (result != -1) {
+//            accessMarker(arrMarkerOptions[result].getTitle());
+//            mFusedLocationClient.removeLocationUpdates(locationCallback);
+//        }
+//        if (result == -1 && checkPermission()) {
+//                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+//        }
+//    }
 
 
 
@@ -363,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    //GPS 활성화를 위한 메소드
+    //GPS 활성화
     private void showDialogForLocationServiceSetting() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -467,16 +478,13 @@ public class MainActivity extends AppCompatActivity implements
         final int id = Integer.parseInt(s);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(arrMarkerOptions[id].getSnippet() + " 해설 페이지로 이동합니다");
+        builder.setMessage(arrMarkerOptions[id].getSnippet() + "에 대한 설명을 보시겠습니까?");
         builder.setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), arrMarkerOptions[id].getSnippet() + " 설명 페이지로 이동합니다.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getBaseContext(), DisplaySubCommentActivity.class);
 
-                        String title = arrMarkerOptions[id].getSnippet();
-
-                        intent.putExtra("title", title);
                         intent.putExtra("id", id);
 
                         startActivity(intent);
@@ -485,7 +493,7 @@ public class MainActivity extends AppCompatActivity implements
         builder.setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_LONG).show();
                     }
                 });
         builder.show();
