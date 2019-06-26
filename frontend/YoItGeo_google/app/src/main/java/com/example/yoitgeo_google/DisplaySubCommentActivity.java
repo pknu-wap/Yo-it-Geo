@@ -3,6 +3,7 @@ package com.example.yoitgeo_google;
 import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class DisplaySubCommentActivity extends AppCompatActivity {

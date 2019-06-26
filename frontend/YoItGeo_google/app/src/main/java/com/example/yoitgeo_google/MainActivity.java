@@ -14,11 +14,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.app.AlertDialog;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
                 //setCurrentLocation(location, markerTitle, markerSnippet);
                 int result = checkDistance(location.getLatitude(), location.getLongitude());
                 if (result != -1) {
-                    accessMarker(arrMarkerOptions[result].getTitle());
+                    setQuiz(arrMarkerOptions[result].getTitle());
                     mFusedLocationClient.removeLocationUpdates(locationCallback);
                 }
                 if (result == -1 && checkPermission()) {
@@ -481,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements
         return -1;
     }
 
-    public void accessMarker(String s) {
+    public void setDialog(String s) {
         final int id = Integer.parseInt(s);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -505,4 +505,59 @@ public class MainActivity extends AppCompatActivity implements
                 });
         builder.show();
     }
+
+    public void setQuiz(String s) {
+        final String str = s;
+        final int id = Integer.parseInt(s);
+
+        final String[][] quiz = {{"ㄴㄹㄱ", "누리관"},
+                {"ㄷㄱㄱㅁ", "돌개구멍"},
+                {"ㄱㄹㄱㅅ", "구리광산"},
+                {"ㅎㅅㄷㄱ", "해식동굴"},
+                {"ㅎㄱㅅㅅㅇㅁ", "함각섬석암맥"},
+                {"ㅎㅅㄱㄹㅇ", "화산각력암"},
+                {"ㅂㅇ", "벽옥"},
+                {"ㅇㅎㅈㅌㅈㅇㅊ", "응회질퇴적암층"},
+                {"ㅎㅍㄱ", "향파관"}};
+
+        final EditText editText = new EditText(this);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("초성 퀴즈");
+        builder.setMessage("현재 이 곳의 명칭은?\n" + "힌트 : " + quiz[id][0]);
+        builder.setView(editText);
+        builder.setPositiveButton("입력",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String answer = editText.getText().toString();
+                        if (answer.equals(quiz[id][1])) {
+                            Toast.makeText(getApplicationContext(), "맞았습니다", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "틀렸습니다", Toast.LENGTH_SHORT).show();
+
+                            setDialog(str);
+                        }
+                    }
+                });
+        builder.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Toast.makeText(getApplicationContext(), "취소를 선택했습니다.", Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.show();
+    }
+
+    public void accessMarker(String s) {
+        final int id = Integer.parseInt(s);
+
+        Toast.makeText(getApplicationContext(), arrMarkerOptions[id].getSnippet() + " 설명 페이지로 이동합니다.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getBaseContext(), DisplaySubCommentActivity.class);
+
+        intent.putExtra("id", id);
+
+        startActivity(intent);
+    }
+
 }
