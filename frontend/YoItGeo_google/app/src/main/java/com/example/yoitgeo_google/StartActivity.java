@@ -2,6 +2,7 @@ package com.example.yoitgeo_google;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 public class StartActivity extends AppCompatActivity {
 

@@ -77,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        // 로딩페이지(스플래쉬)
+        Intent intent = new Intent(this, SplashActivity.class);
+        startActivity(intent);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         // GoogleApiClient의 인스턴스 생성, 지우지 말것!, 현재 위치정보 얻을 때 필요
@@ -90,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_main);
 
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -277,11 +280,9 @@ public class MainActivity extends AppCompatActivity implements
 
         MarkerOptions markerOptions8 = new MarkerOptions();
         markerOptions8
-                .position(new LatLng(35.135341, 129.102948))
+                .position(new LatLng(35.129332, 129.121977))
                 .title("8")
                 .snippet("향파관");
-        markerOptions8.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-        googleMap.addMarker(markerOptions8);
 
         MarkerOptions[] arrMO = {markerOptions0, markerOptions1, markerOptions2, markerOptions3,
                                         markerOptions4, markerOptions5, markerOptions6, markerOptions7, markerOptions8};
