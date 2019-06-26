@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -22,7 +23,12 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,13 +40,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleMap mGoogleMap = null;
     private GoogleApiClient mGoogleApiClient;
@@ -49,7 +57,18 @@ public class MainActivity extends AppCompatActivity implements
     // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용
     private static final int PERMISSIONS_REQUEST_CODE = 1000;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
+    private static final int UPDATE_INTERVAL_MS = 1000;
+    private static final int FASTEST_UPDATE_INTERVAL_MS = 500;
 
+
+    private Marker currentMarker = null;
+    Location mCurrentLocation;
+    LatLng currentPosition;
+    private LocationRequest locationRequest;
+    private Location location;
+
+
+    MarkerOptions[] arrMarkerOptions = new MarkerOptions[7];
 
 
     @Override
@@ -82,7 +101,56 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(this, "현재 위치 표시를 위해 GPS 권한이 필요합니다.", Toast.LENGTH_LONG).show();
             showDialogForLocationServiceSetting();
         }
+
+
+        locationRequest = new LocationRequest()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL_MS)
+                .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
     }
+
+
+    LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+
+            List<Location> locationList = locationResult.getLocations();
+
+            if (locationList.size() > 0) {
+                location = locationList.get(locationList.size() - 1);
+                //location = locationList.get(0);
+
+                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+
+                String markerTitle = "현재 위치";
+                String markerSnippet = "위도:" + String.valueOf(location.getLatitude()) + " 경도:" + String.valueOf(location.getLongitude());
+
+                // 현재 위치에 마커 생성하고 이동
+                setCurrentLocation(location, markerTitle, markerSnippet);
+
+                mCurrentLocation = location;
+            }
+        }
+    };
+
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_CODE);
+            return;
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+
+        if (checkPermissions())
+            mGoogleMap.setMyLocationEnabled(true);
+    }
+
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -134,6 +202,11 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
+        MarkerOptions markerOptions0 = new MarkerOptions();
+        markerOptions0
+                .position(new LatLng(37.4219983, -122.084))
+                .title("Default");
+
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1
                 .position(new LatLng(35.128082, 129.122373))
@@ -176,8 +249,26 @@ public class MainActivity extends AppCompatActivity implements
         markerOptions6.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions6);
 
+        MarkerOptions[] arrMO = {markerOptions0, markerOptions1, markerOptions2, markerOptions3,
+                                        markerOptions4, markerOptions5, markerOptions6};
+        for (int i=0; i<arrMO.length; i++) {
+            arrMarkerOptions[i] = arrMO[i];
+        }
+
+
 
         googleMap.setOnMarkerClickListener(this);
+
+
+        startLocationUpdates();
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+
+            }
+        });
     }
 
     @Override
@@ -205,6 +296,24 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
+        if (currentMarker != null) currentMarker.remove();
+
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLatLng);
+        markerOptions.title(markerTitle);
+        markerOptions.snippet(markerSnippet);
+        markerOptions.draggable(true);
+
+        currentMarker = mGoogleMap.addMarker(markerOptions);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+        mGoogleMap.moveCamera(cameraUpdate);
+    }
+
+
 
     public void setDefaultLocation() {
         //디폴트 위치, 이기대 출발점
@@ -212,6 +321,16 @@ public class MainActivity extends AppCompatActivity implements
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
         mGoogleMap.moveCamera(cameraUpdate);
+    }
+
+
+    private boolean checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_CODE);
+            return false;
+        }
+        return true;
     }
 
 
@@ -287,8 +406,59 @@ public class MainActivity extends AppCompatActivity implements
                     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
                     // 카메라 줌
                     mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+                    System.out.println(myLocation.latitude + ", " + myLocation.longitude);
                 }
             }
         });
+
+    }
+
+    public double getDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
+        Location startPos = new Location("PointA");
+        Location endPos = new Location("PointB");
+
+        startPos.setLatitude(latitude1);
+        startPos.setLongitude(longitude1);
+        endPos.setLatitude(latitude2);
+        endPos.setLongitude(longitude2);
+
+
+        return startPos.distanceTo(endPos); // 미터
+    }
+
+    public int checkDistance(double latitude, double longitude) {
+        for (int i=0; i<arrMarkerOptions.length; i++) {
+            if (getDistance(latitude, longitude, arrMarkerOptions[i].getPosition().latitude, arrMarkerOptions[i].getPosition().longitude) <= 50) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void accessMarker(int i) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getApplicationContext());
+
+        alertDialogBuilder
+                .setMessage(arrMarkerOptions[i].getTitle() + " 해설 페이지로 이동하겠습니까?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // 페이지 이동한다.
+                                // 서버에 arrayMarker[markerNum] 넘겨 준다
+                                System.out.println("페이지 이동");
+                            }
+                        })
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        // 다이얼로그 생성
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // 다이얼로그 보여주기
+        alertDialog.show();
     }
 }
