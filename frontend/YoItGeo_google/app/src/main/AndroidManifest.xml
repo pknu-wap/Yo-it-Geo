@@ -13,8 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DisplayGameActivity"></activity>
-        <activity android:name=".PopupActivity" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".StartActivity"></activity>
+        <activity android:name=".DisplayGameActivity" />
+        <activity
+            android:name=".PopupActivity"
+            android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".DisplaySubCommentActivity" />
         <activity android:name=".DisplayCommentActivity" />
 

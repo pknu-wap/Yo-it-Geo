@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
     private Location location;
 
 
-    MarkerOptions[] arrMarkerOptions = new MarkerOptions[8];
+    MarkerOptions[] arrMarkerOptions = new MarkerOptions[9];
 
 
     @Override
@@ -275,8 +275,16 @@ public class MainActivity extends AppCompatActivity implements
         markerOptions7.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
         googleMap.addMarker(markerOptions7);
 
+        MarkerOptions markerOptions8 = new MarkerOptions();
+        markerOptions8
+                .position(new LatLng(35.129332, 129.121977))
+                .title("8")
+                .snippet("향파관");
+        markerOptions8.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+        googleMap.addMarker(markerOptions8);
+
         MarkerOptions[] arrMO = {markerOptions0, markerOptions1, markerOptions2, markerOptions3,
-                                        markerOptions4, markerOptions5, markerOptions6, markerOptions7};
+                                        markerOptions4, markerOptions5, markerOptions6, markerOptions7, markerOptions8};
         System.arraycopy(arrMO, 0, arrMarkerOptions, 0, arrMO.length);
 
 
