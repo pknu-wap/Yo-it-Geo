@@ -111,18 +111,6 @@ public class DisplayGameActivity extends AppCompatActivity implements View.OnCli
         String choice=answers[a][1];
         return choice;
     }
-    public String getchoice3(int a){
-        String choice=answers[a][2];
-        return choice;
-    }
-    public String getchoice4(int a){
-        String choice=answers[a][3];
-        return choice;
-    }
-    public String getchoice5(int a){
-        String choice=answers[a][4];
-        return choice;
-    }
     public String getCorrAnswer(int a){
         String answer=corrAnswer[a];
         return answer;
