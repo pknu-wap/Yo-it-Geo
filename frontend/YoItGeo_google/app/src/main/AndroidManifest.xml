@@ -24,7 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DisplayGameActivity" />
+        <activity android:name=".DisplayGameActivity"
+            android:label="OX 퀴즈"/>
         <activity android:name=".DisplaySubCommentActivity" />
         <activity android:name=".DisplayCommentActivity" />
 

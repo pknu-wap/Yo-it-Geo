@@ -560,4 +560,67 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+
+
+
+
+
+
+
+
+///////////////////////게임하기
+//    public void GameOver(){
+//        AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(this);
+//        alertDialogBuilder
+//                .setMessage("게임 종료")
+//                .setCancelable(false)
+//                .setPositiveButton("새 게임", new DialogInterface.OnClickListener(){
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int whichbutton){
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                    }
+//                })
+//                .setNegativeButton("나가기", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int whichbutton) {
+//                        System.exit(0);
+//                    }
+//                });
+//        alertDialogBuilder.show();
+//
+//    }
+//    public void NextQuestion(int num){
+//        tv_question.setText(question.getQuestion(num));
+//        btn.setText(question.getchoice1(num));
+//        btn2.setText(question.getchoice2(num));
+//
+//        answer = question.getCorrAnswer(num);
+//    }
+//
+//    //@Override
+//    public void onClick(View v){
+//        switch(v.getId()){
+//            case R.id.btn:
+//                if(btn.getText()==answer){
+//                    Toast.makeText(this,"정답입니다.", Toast.LENGTH_SHORT).show();
+//                    NextQuestion(random.nextInt(questionLength));
+//                }else{
+//                    GameOver();
+//                }
+//                break;
+//
+//            case R.id.btn2:
+//                if(btn2.getText()==answer){
+//                    Toast.makeText(this, "정답입니다.", Toast.LENGTH_SHORT).show();
+//                    NextQuestion(random.nextInt(questionLength));
+//                }else{
+//                    GameOver();
+//                }
+//                break;
+//        }
+//
+//
+//
+//    }
+
 }
