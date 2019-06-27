@@ -6,4 +6,54 @@
     android:layout_height="match_parent"
     tools:context=".DisplayGameActivity">
 
+
+    <TextView
+        android:layout_width="831dp"
+        android:layout_height="67dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="#FF9ACD32"
+        android:text="OX Quiz"
+        android:textSize="50sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.528"
+        app:layout_constraintStart_toEndOf="parent"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/tv_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:paddingTop="20sp"
+        android:text="Question"
+        android:textSize="25sp"
+        tools:layout_editor_absoluteX="-3dp"
+        tools:layout_editor_absoluteY="197dp" />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="192dp"
+        android:layout_height="134dp"
+        android:layout_centerHorizontal="true"
+        android:text="O"
+        android:textSize="60sp"
+        android:textColor="#FF000088"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="442dp" />
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="190dp"
+        android:layout_height="134dp"
+        android:layout_centerHorizontal="true"
+        android:text="X"
+        android:textSize="60sp"
+        android:textColor="#FFDC143C"
+        tools:layout_editor_absoluteX="205dp"
+        tools:layout_editor_absoluteY="442dp" />
+
 </android.support.constraint.ConstraintLayout>

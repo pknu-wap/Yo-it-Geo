@@ -22,6 +22,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBLlbCvY4N1_gPS2hc30exq2eSwdsHRL0c" /> <!-- commit할 때 key 지우기 -->
         <activity android:name=".MainActivity">
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,4 +32,4 @@
         </activity>
     </application>
 
-</manifest>
+  </manifest>

@@ -7,37 +7,26 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar; // 지우지 말것
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Api;
-import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
@@ -49,20 +38,46 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
+
+protected void onCreate(Bundle savedInstanceState){
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    test= "http://216.58.193.78/MediumServer/SelectAllPost.php";
+        task = new URLConnector(test);
+        random = new Random();
+        task.start();
+
+        try{
+        task.join();
+        System.out.println("waiting... for result");
+        }
+        catch(InterruptedException e){
+        }
+
+        String result = task.getResult();
+
+        System.out.println(result);
+
+        btn=(Button)findViewById(R.id.btn);
+        btn.setOnClickListener(this);
+        btn2=(Button)findViewById(R.id.btn2);
+        btn2.setOnClickListener(this);
+
+        tv_questoin=(TextView)findViewById(R.id.tv_question);
+        NextQuestion(random.nextInt(questionLength));
+        }
+
+
+
 
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        View.OnClickListener{
 
     private GoogleMap mGoogleMap = null;
     private GoogleApiClient mGoogleApiClient;
@@ -414,6 +429,66 @@ public class MainActivity extends AppCompatActivity implements
     public void igidaeGame(View view) {
         Intent intent = new Intent(this, DisplayGameActivity.class);
         startActivity(intent);
+    }
+    Button btn, btn2;
+    TextView tv_question;
+    private  DisplayGameActivity question=new DisplayGameActivity();
+    private String answer;
+    private int questionLength=question.questions.length;
+    Random random;
+
+    public void GameOver(){
+        AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(MainActivity.this);
+        alertDialogBuilder
+                .setMessage("게임 종료")
+                .setCancelable(false)
+                .setPositiveButton("새 게임", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichbutton){
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                })
+                .setNegativeButton("나가기", new DialogInterface.OnClickListener() {
+                     @Override
+                    public void onClick(DialogInterface dialog, int whichbutton) {
+                    System.exit(0);
+                    }
+                });
+        alertDialogBuilder.show();
+
+    }
+    public void NextQuestion(int num){
+        tv_question.setText(question.getQuestion(num));
+        btn.setText(question.getchoice1(num));
+        btn2.setText(question.getchoice2(num));
+
+        answer = question.getCorrAnswer(num);
+    }
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()){
+            case R.id.btn:
+                if(btn.getText()==answer){
+                    Toast.makeText(MainActivity.this,"정답입니다.", Toast.LENGTH_SHORT).show();
+                    NextQuestion(random.nextInt(questionLength));
+        }else{
+            GameOver();
+        }
+            break;
+
+            case R.id.btn2:
+                if(btn2.getText()==answer){
+                    Toast.makeText(MainActivity.this, "정답입니다.", Toast.LENGTH_SHORT).show();
+                    NextQuestion(random.nextInt(questionLength));
+                }else{
+                    GameOver();
+                }
+                break;
+        }
+
+
+
     }
 
 }

@@ -4,6 +4,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class DisplayGameActivity extends AppCompatActivity {
+    public String questions[]={"이기대에는 공룡발자국화석이 존재한다.","이기대에는 'ㄱ'자형으로 붉은색 페인트가 칠해진 바위가 존재한다.",
+            "과거 이기대의 지각은 바다에 잠겨 있었다.", "이기대에의 해녀 막사는 해녀들이 \n바다에서 잡아온 어구를 파는 곳이다.",
+            "이기대는 과거 안산암질 마그마 분출에 의해 생성된 \n다양한 화산암 및 퇴적암 지층으로 이루어져 있다."};
+    public String answers[][]={
+            {"O","X"},{"O","X"},{"O","X"},{"O","X"},{"O","X"}
+    };
+    public String corrAnswer[]={"X", "X", "O", "X", "O"};
+
+    public String getQuestion(int a){
+        String question=questions[a];
+        return question;
+    }
+
+    public String getchoice1(int a){
+        String choice=answers[a][0];
+        return choice;
+    }
+    public String getchoice2(int a){
+        String choice=answers[a][1];
+        return choice;
+    }
+    public String getchoice3(int a){
+        String choice=answers[a][2];
+        return choice;
+    }
+    public String getchoice4(int a){
+        String choice=answers[a][3];
+        return choice;
+    }
+    public String getchoice5(int a){
+        String choice=answers[a][4];
+        return choice;
+    }
+    public String getCorrAnswer(int a){
+        String answer=corrAnswer[a];
+        return answer;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
