@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser');
+var url=require('url');
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -18,8 +18,21 @@ var connection = mysql.createConnection({
 
 //mysql접속
 connection.connect();
-var sql='select * from geotable';
-connection.query(sql,function(err,rows){
+
+var app =http.createServer(function(request,response){
+    var _url=request.url;
+    var queryData = url.parse(_url,true).query;
+    var pathname=url.parse(_url,true).pathname;
+    if(pathname === '/'){
+        if(queryData.name!=undefined){
+            
+        }
+    }
+})
+app.get('/:name',function(req,res,next){
+var sql='select geo_id,name,comm from geotable where name=?';
+var request_name;
+connection.query(sql,request_name,function(err,rows){
     if(err){
         console.log(err);
     }else {
@@ -27,6 +40,9 @@ connection.query(sql,function(err,rows){
     }
 })
 
+});
+
 app.listen(3000,function(){
 console.log('server is running...');
 })
+
