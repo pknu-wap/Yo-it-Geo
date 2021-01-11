@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".StartActivity">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_weight="1"
+        android:text="지질공원 선택"
+        android:textAlignment="center"
+        android:textSize="40dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="이기대"
+                android:onClick="choosePark"/>
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="몰운대"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="두송반도"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="송도반도"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="두도"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="태종대"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="오륙도"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="낙동강하구"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="장산"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="금정산"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="구상반려암"
+                android:onClick="choosePark" />
+            <Button
+                android:id="@+id/button12"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="백양산"
+                android:onClick="choosePark" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

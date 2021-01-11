@@ -35,4 +35,18 @@
         android:text="게임 하기"
         android:onClick="igidaeGame" />
 
+    <!--
+    <Button
+        android:id="@+id/onLastLocationButtonClicked"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="내 위치정보 가져오기"
+        android:onClick="onLastLocationButtonClicked" />
+    -->
+
+    <TextView
+        android:id="@+id/txtResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
