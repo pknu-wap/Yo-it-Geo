@@ -20,21 +20,22 @@ app.get('/',(req,res)=>{
 app.get('/geosite',(req,res)=>{
     connection.query('Select * from geosite',(error,rows)=>{
         if(error) throw errors;
-        res.send(rows);
+        res.send({data:rows});
+
     });
 });
 
 app.get('/gps_site',(req,res)=>{
     connection.query('select * from gps_site',(error,rows)=>{
         if(error) throw errors;
-        res.send(rows);
+        res.send({gps_site:rows});
     })
 })
 
 app.get('/experience_program',(req,res)=>{
     connection.query('select * from experience_program',(error,rows)=>{
         if(error) throw errors;
-        res.send(rows);
+        res.send({experience_program:rows});
     })
 })
 

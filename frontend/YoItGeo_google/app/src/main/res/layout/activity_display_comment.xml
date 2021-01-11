@@ -14,13 +14,17 @@
         android:text="이기대"
         android:textSize="50dp" />
 
-    <TextView
-        android:id="@+id/geo_exp"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:text="설명"
-        android:textSize="20dp"/>
+        android:layout_height="550dp">
 
+        <TextView
+            android:id="@+id/geo_exp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="설명"
+            android:textSize="20dp" />
+    </ScrollView>
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
