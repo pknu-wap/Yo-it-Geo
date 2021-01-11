@@ -28,14 +28,14 @@ app.get('/geosite',(req,res)=>{
 app.get('/gps_site',(req,res)=>{
     connection.query('select * from gps_site',(error,rows)=>{
         if(error) throw errors;
-        res.send({gps_site:rows});
+        res.send({data:rows});
     })
 })
 
 app.get('/experience_program',(req,res)=>{
     connection.query('select * from experience_program',(error,rows)=>{
         if(error) throw errors;
-        res.send({experience_program:rows});
+        res.send({data:rows});
     })
 })
 

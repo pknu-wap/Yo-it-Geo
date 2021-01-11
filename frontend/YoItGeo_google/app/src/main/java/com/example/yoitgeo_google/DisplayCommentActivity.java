@@ -38,7 +38,7 @@ public class DisplayCommentActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                sendRequest();
+                sendRequest("geosite");
             }
         });
         if(AppHelper.requestQueue == null){
@@ -48,8 +48,9 @@ public class DisplayCommentActivity extends AppCompatActivity {
 
     }
 
-    public void sendRequest(){
-       url = "http://192.168.219.100:3000/geosite";
+    public void sendRequest(String name){
+
+       url = dbServer.firstURL+name;
 
         StringRequest obreq = new StringRequest(Request.Method.GET,url,
                 new Response.Listener<String>() {
@@ -57,16 +58,18 @@ public class DisplayCommentActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
+
                             JSONObject jsonObj = new JSONObject(response);
-                            Log.d("test",response);
+                            //Log.d("test",response);
                             JSONArray array = jsonObj.getJSONArray("data");
 
                             for(int i=0;i<array.length();i++){
                                 JSONObject obj = array.getJSONObject(i);
-                                Log.d("namme", obj.getString("geo_name"));
+                                Log.d("name", obj.getString("geo_name"));
                                 for(int j= 0; j < siteName.length;j++) {
                                     if (obj.getString("geo_name").equals(siteName[j])) {
-                                        Log.d("geo", obj.getString("geo_explanation"));
+                                       // Log.d("geo", obj.getString("geo_explanation"));
+
                                         geo_exp.setText(obj.getString("geo_explanation"));
                                     }
                                 }
@@ -84,7 +87,9 @@ public class DisplayCommentActivity extends AppCompatActivity {
                     }
                 }
         );
-
+        obreq.setShouldCache(false);//이전 결과가 있어도 새로 요청하여 응답을 보여준다.
+        AppHelper.requestQueue = Volley.newRequestQueue(this); // requestQueue 초기화 필수
+        AppHelper.requestQueue.add(obreq);
 
 /*
         StringRequest request = new StringRequest(Request.Method.GET,
@@ -110,12 +115,10 @@ public class DisplayCommentActivity extends AppCompatActivity {
 
  */
 
-        obreq.setShouldCache(false);//이전 결과가 있어도 새로 요청하여 응답을 보여준다.
-        AppHelper.requestQueue = Volley.newRequestQueue(this); // requestQueue 초기화 필수
-        AppHelper.requestQueue.add(obreq);
     }
-
+/*
     public void println(String data){
         geo_exp.append(data+"\n");
     }
+ */
 }
