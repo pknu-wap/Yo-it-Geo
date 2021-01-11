@@ -8,16 +8,16 @@
     tools:context=".DisplayCommentActivity">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/geo_name"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="title"
+        android:text="이기대"
         android:textSize="50dp" />
 
     <TextView
-        android:id="@+id/comment"
+        android:id="@+id/geo_exp"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:text="comment"
+        android:text="설명"
         android:textSize="20dp"/>
 </LinearLayout>
