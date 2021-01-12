@@ -23,7 +23,7 @@ public class DisplayCommentActivity extends AppCompatActivity {
     TextView geo_exp;
     Button button;
     String url;
-    String[] siteName = {"송정해수욕장","이기대"};
+    //String[] siteName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,27 +32,30 @@ public class DisplayCommentActivity extends AppCompatActivity {
 
         geo_name = (TextView) findViewById(R.id.geo_name);
         geo_exp = (TextView) findViewById(R.id.geo_exp);
-        button = (Button)findViewById(R.id.button);
+        button = (Button) findViewById(R.id.button);
 
-        button.setOnClickListener(new View.OnClickListener(){
+        geo_name.setText(dbServer.getGeoname());
+       // sendRequest("geosite");
+
+        button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 sendRequest("geosite");
             }
         });
-        if(AppHelper.requestQueue == null){
-            AppHelper.requestQueue= Volley.newRequestQueue(getApplicationContext());
+        if (AppHelper.requestQueue == null) {
+            AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
 
 
     }
 
-    public void sendRequest(String name){
+    public void sendRequest(String name) {
 
-       url = dbServer.firstURL+name;
+        url = dbServer.firstURL + name;
 
-        StringRequest obreq = new StringRequest(Request.Method.GET,url,
+        StringRequest obreq = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
 
                     @Override
@@ -63,12 +66,13 @@ public class DisplayCommentActivity extends AppCompatActivity {
                             //Log.d("test",response);
                             JSONArray array = jsonObj.getJSONArray("data");
 
-                            for(int i=0;i<array.length();i++){
+                            for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = array.getJSONObject(i);
                                 Log.d("name", obj.getString("geo_name"));
-                                for(int j= 0; j < siteName.length;j++) {
-                                    if (obj.getString("geo_name").equals(siteName[j])) {
-                                       // Log.d("geo", obj.getString("geo_explanation"));
+                                for (int j = 0; j < dbServer.nameList.size(); j++) {
+                                    if (dbServer.getGeoname().equals(dbServer.nameList.get(j))) {
+                                        //if (obj.getString("geo_name").equals(dbServer.nameList.get(j))) {
+                                        // Log.d("geo", obj.getString("geo_explanation"));
 
                                         geo_exp.setText(obj.getString("geo_explanation"));
                                     }
@@ -83,7 +87,7 @@ public class DisplayCommentActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley","Error");
+                        Log.e("Volley", "Error");
                     }
                 }
         );

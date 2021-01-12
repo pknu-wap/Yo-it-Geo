@@ -14,6 +14,12 @@
         android:text="이기대"
         android:textSize="50dp" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="해설보기" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="300dp">
@@ -25,9 +31,4 @@
             android:text="설명"
             android:textSize="20dp" />
     </ScrollView>
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 </LinearLayout>
