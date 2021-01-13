@@ -17,6 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class DisplayCommentActivity extends AppCompatActivity {
     TextView geo_name;
@@ -35,7 +38,8 @@ public class DisplayCommentActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.button);
 
         geo_name.setText(dbServer.getGeoname());
-       // sendRequest("geosite");
+        geo_exp.setText(dbServer.getGeo_exp());
+        // sendRequest("geosite");
 
         button.setOnClickListener(new View.OnClickListener() {
 
@@ -69,13 +73,12 @@ public class DisplayCommentActivity extends AppCompatActivity {
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = array.getJSONObject(i);
                                 Log.d("name", obj.getString("geo_name"));
-                                for (int j = 0; j < dbServer.nameList.size(); j++) {
-                                    if (dbServer.getGeoname().equals(dbServer.nameList.get(j))) {
-                                        //if (obj.getString("geo_name").equals(dbServer.nameList.get(j))) {
-                                        // Log.d("geo", obj.getString("geo_explanation"));
+                                Log.d("exp", obj.getString("geo_explanation"));
+                                if (dbServer.getGeoname().equals(obj.getString("geo_name"))) {
+                                    //if (obj.getString("geo_name").equals(dbServer.nameList.get(j))) {
+                                    // Log.d("geo", obj.getString("geo_explanation"));
 
-                                        geo_exp.setText(obj.getString("geo_explanation"));
-                                    }
+                                    geo_exp.setText(obj.getString("geo_explanation"));
                                 }
                             }
 

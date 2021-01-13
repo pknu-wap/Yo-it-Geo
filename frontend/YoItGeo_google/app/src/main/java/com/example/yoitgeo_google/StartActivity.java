@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 public class StartActivity extends AppCompatActivity {
     Button btn;
+    Button btn2;
     ArrayList<String> test;
 
 
@@ -46,6 +47,16 @@ public class StartActivity extends AppCompatActivity {
                 //Log.d("geo_name:",test.get(1));
                 dbServer.setGeoname(test.get(1));  //"geo_name 변수 넘기기: 해설, 체험 프로그램 때 사용"
                 //Log.d("dbServer.geoname",dbServer.getGeoname());
+                startActivity(mainIntent);
+            }
+        });
+
+        btn2 = (Button)findViewById(R.id.button2);
+        btn2.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                dbServer.setGeoname(test.get(0));
                 startActivity(mainIntent);
             }
         });
