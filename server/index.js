@@ -26,7 +26,7 @@ app.get('/geosite',(req,res)=>{
 });
 
 app.get('/gps_site',(req,res)=>{
-    connection.query('select * from gps_site',(error,rows)=>{
+    connection.query('select * from gps_site order by geo_name desc',(error,rows)=>{
         if(error) throw errors;
         res.send({data:rows});
     })

@@ -54,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -629,6 +630,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         if(name.equals("gps_site")){
+            dbServer.gps_name_list = new ArrayList<>(); //초기화하는 함수 해야할듯..
             StringRequest obreq = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
 
@@ -642,10 +644,12 @@ public class MainActivity extends AppCompatActivity implements
 
                                 for (int i = 0; i < array.length(); i++) {
                                     JSONObject obj = array.getJSONObject(i);
-                                    dbServer.gps_name_list.add(obj.getString("gps_name"));
-                                    Log.d("gps_name_list element",dbServer.gps_name_list.get(i));
+                                    if(dbServer.getGeoname().equals(obj.getString("geo_name"))) {
+                                        dbServer.gps_name_list.add(obj.getString("gps_name"));
+                                    }else {continue;}
+                                    Log.d("gps_name_list element", dbServer.gps_name_list.get(i));
+                                    Log.d("gps_name_list length", String.valueOf(dbServer.gps_name_list.size()));
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
