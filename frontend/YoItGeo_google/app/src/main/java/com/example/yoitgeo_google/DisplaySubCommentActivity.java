@@ -32,7 +32,7 @@ public class DisplaySubCommentActivity extends AppCompatActivity {
         else {
             id = extras.getInt("id");
         }
-
+/*
         TextView textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         TextView textViewComment = (TextView) findViewById(R.id.textViewComment);
 
@@ -40,5 +40,7 @@ public class DisplaySubCommentActivity extends AppCompatActivity {
         String comment = igidaeComment[id][1];
         textViewTitle.setText(title);
         textViewComment.setText(comment);
+
+ */
     }
 }

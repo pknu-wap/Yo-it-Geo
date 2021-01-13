@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,6 +24,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,6 +49,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.List;
@@ -71,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements
     private LocationRequest locationRequest;
     private Location location;
 
+    private Button comment;
+    private String url;
 
     MarkerOptions[] arrMarkerOptions = new MarkerOptions[9];
 
@@ -114,6 +125,23 @@ public class MainActivity extends AppCompatActivity implements
                 .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(locationRequest);
+
+        //해설 넘어갈 때 geo_explanation 불러오기
+        comment = (Button)findViewById(R.id.button_comment);
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendRequest("geosite");
+
+                Intent intent = new Intent(getApplicationContext(), DisplayCommentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        if (AppHelper.requestQueue == null) {
+            AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
+        }
+
     }
 
 
@@ -418,10 +446,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
     // 버튼 이벤트
-    public void igidaeComment(View view) {
-        Intent intent = new Intent(this, DisplayCommentActivity.class);
-        startActivity(intent);
-    }
 
     public void igidaeReservation(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.busan.go.kr/geopark/tm0303"));
@@ -561,9 +585,77 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    public void sendRequest(String name) {
 
+        url = dbServer.firstURL + name;
 
+        StringRequest obreq = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
 
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(response);
+                            //Log.d("test",response);
+                            JSONArray array = jsonObj.getJSONArray("data");
+
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject obj = array.getJSONObject(i);
+                                // Log.d("name", obj.getString("geo_name"));
+                                //Log.d("exp", obj.getString("geo_explanation"));
+
+                                if (dbServer.getGeoname().equals(obj.getString("geo_name"))) {
+                                    dbServer.setGeo_exp(obj.getString("geo_explanation"));
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Volley", "Error");
+                    }
+                }
+        );
+        obreq.setShouldCache(false);//이전 결과가 있어도 새로 요청하여 응답을 보여준다.
+        AppHelper.requestQueue = Volley.newRequestQueue(this); // requestQueue 초기화 필수
+        AppHelper.requestQueue.add(obreq);
+    }
+
+/*
+        StringRequest request = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        println(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        println("에러다 =>" + error.getMessage());
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                return params;
+            }
+        };
+}
+ */
+
+/*
+    public void println(String data){
+        geo_exp.append(data+"\n");
+    }
+ */
 
 
 

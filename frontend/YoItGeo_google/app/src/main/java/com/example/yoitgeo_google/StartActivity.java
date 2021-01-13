@@ -80,7 +80,6 @@ public class StartActivity extends AppCompatActivity {
     //지리 이름 목록 arrayList으로 저장
     public ArrayList<String> extractNameList(){
         final ArrayList<String> nameList = new ArrayList<String>();
-        dbServer.nameList=new ArrayList<>();
         String url = dbServer.firstURL+"geosite";
 
         StringRequest obreq = new StringRequest(Request.Method.GET,url,
@@ -98,8 +97,6 @@ public class StartActivity extends AppCompatActivity {
                                 JSONObject obj = array.getJSONObject(i);
                                 //Log.d("name", obj.getString("geo_name"));
                                 nameList.add(obj.getString("geo_name"));
-                                dbServer.nameList.add(obj.getString("geo_name"));
-                                Log.d("dbServer.nameList",dbServer.nameList.get(i));
                                 //Log.d("nameList",nameList.get(i));
                             }
 

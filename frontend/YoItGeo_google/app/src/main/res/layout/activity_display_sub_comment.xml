@@ -8,14 +8,14 @@
     tools:context=".DisplaySubCommentActivity">
 
     <TextView
-        android:id="@+id/textViewTitle"
+        android:id="@+id/gps_title"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:text="TextView"
         android:textSize="50dp" />
 
     <TextView
-        android:id="@+id/textViewComment"
+        android:id="@+id/gps_exp"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:text="TextView" />

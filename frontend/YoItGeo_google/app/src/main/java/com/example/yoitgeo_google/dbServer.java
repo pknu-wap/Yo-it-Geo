@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class dbServer {
     public static String firstURL = "http://192.168.219.100:3000/";
@@ -27,7 +28,6 @@ public class dbServer {
 
     private static String geoname;
 
-
     public static String getGeo_exp() {
         return geo_exp;
     }
@@ -37,7 +37,5 @@ public class dbServer {
     }
 
     private static String geo_exp;
-
-    public static ArrayList<String> nameList; //geo_name 리스트
 
 }

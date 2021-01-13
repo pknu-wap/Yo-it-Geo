@@ -18,8 +18,8 @@
         android:id="@+id/button_comment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="이기대 해설"
-        android:onClick="igidaeComment" />
+        android:text="해설"
+        />
 
     <Button
         android:id="@+id/button_reservation"

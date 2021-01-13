@@ -36,7 +36,7 @@
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:text="몰운대"
+                android:text="송정해수욕장"
                 android:onClick="choosePark" />
             <Button
                 android:id="@+id/button3"
