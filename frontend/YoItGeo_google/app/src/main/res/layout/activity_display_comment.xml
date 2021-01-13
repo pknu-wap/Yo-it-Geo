@@ -16,7 +16,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="200dp">
 
         <TextView
             android:id="@+id/geo_exp"
@@ -26,11 +26,9 @@
             android:textSize="20dp" />
     </ScrollView>
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/view_gps_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"/>
 
-    </LinearLayout>
 </LinearLayout>

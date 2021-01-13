@@ -54,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 sendRequest("geosite");
-
+                sendRequest("gps_site");
                 Intent intent = new Intent(getApplicationContext(), DisplayCommentActivity.class);
                 startActivity(intent);
             }
@@ -626,7 +627,42 @@ public class MainActivity extends AppCompatActivity implements
         AppHelper.requestQueue = Volley.newRequestQueue(this); // requestQueue 초기화 필수
         AppHelper.requestQueue.add(obreq);
     }
+    public void sendRequestGPS(String name) {
+        url = dbServer.firstURL + name;
 
+        StringRequest obreq = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(response);
+                            //Log.d("test",response);
+                            JSONArray array = jsonObj.getJSONArray("data");
+
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject obj = array.getJSONObject(i);
+                                dbServer.gps_name_list.add(obj.getString("gps_name"));
+                                Log.d("gps_name_list element",dbServer.gps_name_list.get(i));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Volley", "Error");
+                    }
+                }
+        );
+        obreq.setShouldCache(false);//이전 결과가 있어도 새로 요청하여 응답을 보여준다.
+        AppHelper.requestQueue = Volley.newRequestQueue(this); // requestQueue 초기화 필수
+        AppHelper.requestQueue.add(obreq);
+    }
 /*
         StringRequest request = new StringRequest(Request.Method.GET,
                 url,

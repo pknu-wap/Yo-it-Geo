@@ -2,9 +2,11 @@ package com.example.yoitgeo_google;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -24,6 +26,7 @@ import java.util.List;
 public class DisplayCommentActivity extends AppCompatActivity {
     TextView geo_name;
     TextView geo_exp;
+    RecyclerView gps_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,12 @@ public class DisplayCommentActivity extends AppCompatActivity {
 
         geo_name.setText(dbServer.getGeoname());
         geo_exp.setText(dbServer.getGeo_exp());
+
+        //gps_site 정보 불러오기
+        gps_list = (RecyclerView)findViewById(R.id.view_gps_name);
+
+
+
 
     }
 }

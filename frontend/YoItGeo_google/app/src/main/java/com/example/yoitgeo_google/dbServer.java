@@ -38,4 +38,6 @@ public class dbServer {
 
     private static String geo_exp;
 
+    public static ArrayList<String> gps_name_list = new ArrayList<>();  //지역에 따른 지점명소 이름 리스트(설명 밑에 보여주기 위해 사용)
+
 }
