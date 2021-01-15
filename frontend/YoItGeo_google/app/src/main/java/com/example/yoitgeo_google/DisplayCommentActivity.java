@@ -1,10 +1,13 @@
 package com.example.yoitgeo_google;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,7 +29,7 @@ import java.util.List;
 public class DisplayCommentActivity extends AppCompatActivity {
     TextView geo_name;
     TextView geo_exp;
-    RecyclerView gps_list;
+    ListView gps_name_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +43,22 @@ public class DisplayCommentActivity extends AppCompatActivity {
         geo_exp.setText(dbServer.getGeo_exp());
 
         //gps_site 정보 불러오기
-        gps_list = (RecyclerView)findViewById(R.id.view_gps_name);
+        gps_name_list = (ListView) findViewById(R.id.view_gps_name);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,dbServer.gps_name_list);
+        gps_name_list.setAdapter(adapter);
 
-
+        gps_name_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(),DisplaySubCommentActivity.class);
+                //dbServer.setChosen_gps_name(dbServer.gps_name_list.get(position));
+                intent.putExtra("gps_name",dbServer.gps_name_list.get(position));
+                intent.putExtra("gps_exp",dbServer.gps_exp_list.get(position));
+                //Log.d("gps_name",dbServer.gps_name_list.get(position));
+                Log.d("gps_exp",dbServer.gps_exp_list.get(position));
+                startActivity(intent);
+            }
+        });
 
 
     }

@@ -631,6 +631,9 @@ public class MainActivity extends AppCompatActivity implements
 
         if(name.equals("gps_site")){
             dbServer.gps_name_list = new ArrayList<>(); //초기화하는 함수 해야할듯..
+            dbServer.gps_exp_list = new ArrayList<>();
+            dbServer.hint_list= new ArrayList<>();
+
             StringRequest obreq = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
 
@@ -646,9 +649,14 @@ public class MainActivity extends AppCompatActivity implements
                                     JSONObject obj = array.getJSONObject(i);
                                     if(dbServer.getGeoname().equals(obj.getString("geo_name"))) {
                                         dbServer.gps_name_list.add(obj.getString("gps_name"));
-                                    }else {continue;}
-                                    Log.d("gps_name_list element", dbServer.gps_name_list.get(i));
-                                    Log.d("gps_name_list length", String.valueOf(dbServer.gps_name_list.size()));
+                                        dbServer.gps_exp_list.add(obj.getString("gps_explanation"));
+                                        //Log.d("gps_exp_list",dbServer.gps_exp_list.get(i));
+                                        dbServer.hint_list.add(obj.getString("hint"));
+                                       // Log.d("hint",dbServer.hint_list.get(i));
+                                     //   Log.d("gps_name_list element", dbServer.gps_name_list.get(i));
+                                     //   Log.d("gps_name_list length", String.valueOf(dbServer.gps_name_list.size()));
+                                    }
+
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
